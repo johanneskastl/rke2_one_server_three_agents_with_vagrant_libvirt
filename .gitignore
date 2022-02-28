@@ -3,3 +3,9 @@
 #
 .vagrant
 Vagrantfile.1
+
+# ignore the downloaded kubeconfig file
+ansible/rke2-kubeconfig
+
+# ignore the downloaded token file
+ansible/rke2-token
