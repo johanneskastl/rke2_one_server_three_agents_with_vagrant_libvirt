@@ -1,3 +1,6 @@
 [submodule "ansible/roles/create_a_vimrc"]
 	path = ansible/roles/create_a_vimrc
 	url = https://github.com/johanneskastl/ansible-role-create_a_vimrc.git
+[submodule "ansible/roles/install_rke2"]
+	path = ansible/roles/install_rke2
+	url = https://github.com/johanneskastl/ansible-role-install_rke2.git
