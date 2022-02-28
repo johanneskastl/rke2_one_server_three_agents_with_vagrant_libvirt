@@ -4,3 +4,6 @@
 [submodule "ansible/roles/install_rke2"]
 	path = ansible/roles/install_rke2
 	url = https://github.com/johanneskastl/ansible-role-install_rke2.git
+[submodule "ansible/roles/minimal_bashrc"]
+	path = ansible/roles/minimal_bashrc
+	url = https://github.com/johanneskastl/ansible-role-minimal_bashrc.git
