@@ -1,0 +1,55 @@
+---
+- name: 'Configure the nodes'
+  hosts: 'all'
+  gather_facts: 'yes'
+  become: 'true'
+
+  roles:
+    - role: 'minimal_bashrc'
+      vars:
+        additional_users: "{{ ansible_user }}"
+    - role: 'create_a_vimrc'
+      vars:
+        additional_users: "{{ ansible_user }}"
+
+- name: 'Install, configure and start rke2 on the first rke2 server'
+  hosts: 'rke2_servers[0]'
+  gather_facts: 'yes'
+  become: 'true'
+
+  roles:
+    - role: 'install_rke2'
+      vars:
+        fetch_token: 'true'
+
+- name: 'Install, configure and start rke2 on the agent nodes'
+  hosts: 'rke2_agents'
+  gather_facts: 'yes'
+  become: 'true'
+  # only run one node at a time, otherwise the first start of the service might fail
+  serial: 1
+
+  pre_tasks:
+
+    - name: 'Create /etc/rancher/rke2 directory'
+      file:
+        path: '/etc/rancher/rke2'
+        state: 'directory'
+        owner: 'root'
+        group: 'root'
+        mode: '0755'
+
+    - name: 'Copy token file to /etc/rancher/rke2/token_to_register'
+      copy:
+        src: 'rke2-token'
+        dest: '/etc/rancher/rke2/token_to_register'
+        owner: 'root'
+        group: 'root'
+        mode: '0600'
+
+  roles:
+    - role: 'install_rke2'
+      vars:
+        rke2_node_type: 'agent'
+        server_url: "https://{{ hostvars[groups['rke2_servers'][0]]['ansible_default_ipv4']['address'] }}:9345"
+        token_file: '/etc/rancher/rke2/token_to_register'
